@@ -1,0 +1,38 @@
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
+  <h1 class="h2">Todos</h1>
+</div>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Id</th>
+      <th scope="col">Title</th>
+      <th scope="col">Description</th>
+      <th scope="col">Status</th>
+      <th scope="col">Actions</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @todos.each do |todo| %>
+      <tr>
+        <td><%= todo.id %></td>
+        <td><%= todo.title %></td>
+        <td><%= todo.description %></td>
+        <td><%= todo.status.titleize %></td>
+        <td>
+          <%= link_to 'Show', project_todo_path(todo.project, todo) %> |
+          <%= link_to 'Edit', edit_project_todo_path(todo.project, todo) %> |
+          <%= link_to 'Destroy', [todo.project, todo], method: :delete, data: { confirm: 'Are you sure?' } %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'Back to project', project_path(@project) %>
+
+<br><br>
+<%= link_to 'Add ToDo', new_project_todo_path(@project), class: 'btn btn-primary' %>

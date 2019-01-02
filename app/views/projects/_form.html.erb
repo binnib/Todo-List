@@ -1,0 +1,31 @@
+<%= form_with(model: project, local: true) do |form| %>
+  <% if project.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(project.errors.count, "error") %> prohibited this project from being saved:</h2>
+
+      <ul>
+        <% project.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+  <div class="form-group">
+    <%= form.label :name, "Project Name" %>
+    <%= form.text_field :name, class: 'form-control' %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :add_developers %>
+    <%= form.collection_check_boxes :developer_ids, User.developer, :id, :name do |b| %>
+      <div class="form-check">
+        <%= b.check_box(class: 'form-check-input') %>
+        <%= b.label(class: 'form-check-label') %>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit nil, class: 'btn btn-primary' %>
+  </div>
+<% end %>

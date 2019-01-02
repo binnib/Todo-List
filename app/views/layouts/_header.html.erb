@@ -1,0 +1,15 @@
+<nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
+  <%= link_to 'ToDo App', root_path, class: 'navbar-brand col-sm-3 col-md-2 mr-0' %>
+  <% if user_signed_in? %>
+    <%= link_to "Signed in as #{current_user.email} (#{current_user.role})", "#", class: 'navbar-brand' %>
+  <% end %>
+  <ul class="navbar-nav px-3">
+    <li class="nav-item text-nowrap">
+      <% if user_signed_in? %>
+        <%= link_to "Sign out", destroy_user_session_path, class: "nav-link", method: :delete %>
+      <% else %>
+        <%= link_to "Sign In", new_user_session_path, class: "nav-link" %>
+      <% end %>
+    </li>
+  </ul>
+</nav>

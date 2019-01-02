@@ -1,0 +1,105 @@
+<div class="chartjs-size-monitor" style="position: absolute; left: 0px; top: 0px; right: 0px; bottom: 0px; overflow: hidden; pointer-events: none; visibility: hidden; z-index: -1;">
+  <div class="chartjs-size-monitor-expand" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
+    <div style="position:absolute;width:1000000px;height:1000000px;left:0;top:0"></div>
+  </div>
+  <div class="chartjs-size-monitor-shrink" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
+    <div style="position:absolute;width:200%;height:200%;left:0; top:0"></div>
+  </div>
+</div>
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+  <h1 class="h2">Dashboard</h1>
+</div>
+
+<!-- TODO chart -->
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
+  <h1 class="h3">Todo Chart</h1>
+</div>
+<div id="piechart_3d" style="width: 900px; height: 500px;"></div>
+
+<script type="text/javascript">
+  google.charts.load("current", {packages:["corechart"]});
+  google.charts.setOnLoadCallback(drawChart);
+  function drawChart() {
+    var data = google.visualization.arrayToDataTable(<%== @status_wise_todos %>);
+
+    var options = {
+      title: 'Status Wise Distribution',
+      is3D: true,
+    };
+
+    var chart = new google.visualization.PieChart(document.getElementById('piechart_3d'));
+    chart.draw(data, options);
+  }
+</script>
+
+
+
+<!-- Grouped by Developers -->
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
+  <h1 class="h3">Tasks (Grouped by Developers)</h1>
+</div>
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Status</th>
+      <% @developer_wise_todos.each do |developer, _todos| %>
+        <th scope="col">
+          <%= developer.name %>
+        </th>
+      <% end %>
+    </tr>
+  </thead>
+  <tbody>
+    <% statues = { :done => :todos_done,
+                    :in_progress => :todos_in_progress,
+                    :new => :todos_new
+                 }
+    %>
+    <% statues.each do |key, value| %>
+      <tr>
+        <td><%= key.to_s.titleize %></td>
+        <% @developer_wise_todos.each do |developer, todos| %>
+          <td>
+            <% status_wise_todos = todos.select { |todo| todo.status.to_sym == key } %>
+            <% status_wise_todos.each do |todo| %>
+              <span><%= todo.title %></span></br>
+            <% end %>
+          </td>
+        <% end %>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<!-- Grouped by Projects -->
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
+  <h1 class="h3">Tasks (Grouped by Projects)</h1>
+</div>
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Status</th>
+      <% @project_wise_todos.each do |project, _todos| %>
+        <th scope="col">
+          <%= project.name %>
+        </th>
+      <% end %>
+    </tr>
+  </thead>
+  <tbody>
+    <% statues = %i[done in_progress new] %>
+    <% statues.each do |status| %>
+      <tr>
+        <td><%= status.to_s.titleize %></td>
+        <% @project_wise_todos.each do |_project, todos| %>
+          <td>
+            <% status_wise_todos = todos.select { |todo| todo.status.to_sym == status } %>
+            <% status_wise_todos.each do |todo| %>
+              <span><%= todo.title %></span></br>
+            <% end %>
+          </td>
+        <% end %>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
